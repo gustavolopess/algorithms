@@ -8,7 +8,7 @@
 #include <cstdio>
 #include <cstring>
 
-char* URLify(char *str) {
+void URLify(char *str) {
     size_t true_len, all_len;
     true_len = all_len = strlen(str)-1;
     while(str[true_len] == ' ') true_len--;
