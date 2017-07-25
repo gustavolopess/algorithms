@@ -3,69 +3,111 @@ package ch02;
 public class CustomLinkedList<T> {
 	private static class Node<T> {
 		private T data;
-		private Node<T> next = null;
+		private Node<T> next;
+		private Node<T> prev;
 		
 		public Node(T d) {
 			this.data = d;
+			next = null;
+			prev = null;
 		}
-		public Node() {}
+		public Node() {
+			next = null;
+			prev = null;
+		}
 		
 		public T getData() {
 			return data;
 		}
 		
-		public Node<T> getNext() {
+		public Node<T> getNext() throws NullPointerException {
+			if (next == null) throw new NullPointerException("Null next pointer");
 			return next;
 		}
 		
 		public void setNext(Node<T> n) {
 			next = n;
 		}
+		
+		public void setPrev(Node<T> n) {
+			prev = n;
+		}
+		
+		public Node<T> getPrev() throws NullPointerException {
+			if (prev == null) throw new NullPointerException("Null prev pointer");
+			return prev;
+		}
 	}
 	
-	Node<T> head = new Node<T>();
-	Node<T> tail = head;
-	Node<T> preTail = null;
+	Node<T> head;
+	Node<T> tail;
+	long size;
 	
-	void pushBack(T d) {
-		Node<T> newTail = new Node<T>(d);
-		tail.next = newTail;
-		preTail = tail;
-		tail = newTail;
+	
+	public CustomLinkedList() {
+		head = new Node<T>();
+		tail = new Node<T>();
+		head.setNext(tail);
+		tail.setPrev(head);
+		size = 0;
 	}
 	
-	Node<T> popBack() throws NullPointerException {
-		Node<T> popped = new Node<T>(tail.getData());
-		System.out.println(String.format("%b %d %d",tail == head, tail.getData(), head.getData()));
-		if (tail == head) {
-			throw new NullPointerException("List is empty");
-		}
-		if (preTail.getNext() == null) {
-			tail = head;
-		}
-		preTail.setNext(null);
-		tail = preTail;
+	
+	public long getSize() {
+		return size;
+	}
+	
+	public void pushBack(T d) {
+		Node<T> before = tail.getPrev();
+		Node<T> newNode = new Node<T>(d);
+		before.setNext(newNode);;
+		newNode.setNext(tail);
+		newNode.setPrev(before);
+		tail.setPrev(newNode);
+		size++;
+	}
+	
+	public void pushFront(T d) {
+		Node<T> after = head.getNext();
+		Node<T> newNode = new Node<T>(d);
+		after.setPrev(newNode);
+		newNode.setNext(after);
+		newNode.setPrev(head);
+		head.setNext(newNode);
+		size++;
+	}
+	
+	public Node<T> popBack() throws IllegalStateException {
+		if (isEmpty()) throw new IllegalStateException("Cannot pop from an empty list");
+		Node<T> popped = tail.getPrev();
+		tail.setPrev(popped.getPrev());
+		popped.getPrev().setNext(tail);
+		size--;
 		return popped;
 	}
 	
-	Node<T> popFront() throws NullPointerException {
-		if (head.next != null) {
-			Node<T> popped = head.getNext();
-			head.next = head.getNext().getNext();
-			return popped;
-		} else {
-			throw new NullPointerException("List is empty");
+	public Node<T> popFront() throws IllegalStateException {
+		if (isEmpty()) throw new IllegalStateException("Cannot pop from an empty list");
+		Node<T> popped = head.getNext();
+		head.setNext(popped.getNext());
+		popped.getPrev().setPrev(head);
+		size--;
+		return popped;
+	}
+
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		Node<T> curr = head.getNext();
+		while (curr != tail) {
+			sb.append(curr.getData() + " ");
+			curr = curr.getNext();
 		}
+		return sb.toString();
 	}
 	
-	
-	void print() {
-		Node<T> curr = head.next;
-		while (curr != null) {
-			System.out.print(curr.getData() + " ");
-			curr = curr.next;
-		}
-		System.out.println();
+	public Boolean isEmpty() {
+		return size == 0;
 	}
 	
 	
@@ -73,8 +115,12 @@ public class CustomLinkedList<T> {
 		CustomLinkedList<Integer> list = new CustomLinkedList<Integer>();
 		list.pushBack(10);
 		list.pushBack(20);
+		list.pushFront(300);
+		System.out.println(list);
 		list.popBack();
+		System.out.println(list.getSize());
 		list.popBack();
+		System.out.println(list);
 		list.popBack();
 		list.popBack();
 	}
