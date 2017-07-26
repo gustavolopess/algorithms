@@ -5,8 +5,7 @@ import java.util.HashSet;
 import ch02.CustomLinkedList;
 
 
-class CustomLinkedListWithDeletion<T> extends CustomLinkedList<T> {
-	
+class CustomLinkedListQ1<T> extends CustomLinkedList<T> {
 	
 	public void deleteDups() {
 		CustomLinkedList<T>.Node<T> curr = this.head.getNext(); 
@@ -21,13 +20,15 @@ class CustomLinkedListWithDeletion<T> extends CustomLinkedList<T> {
 			curr = curr.getNext();
 		}
 	}
+	
+	
 }
 
 
 public class Q2_1  {
 	
 	public static void main(String[] args) {
-		CustomLinkedListWithDeletion<Integer> list = new CustomLinkedListWithDeletion<Integer>();
+		CustomLinkedListQ1<Integer> list = new CustomLinkedListQ1<Integer>();
 		list.pushAllBack(new Integer[] {1, 2, 3, 4, 5, 6, 7, 7, 7, 7, 10, 2, 1, 1, 1});
 		System.out.println(list);
 		list.deleteDups();
