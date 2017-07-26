@@ -1,7 +1,7 @@
 package ch02;
 
 public class CustomLinkedList<T> {
-	private static class Node<T> {
+	protected class Node<T> {
 		private T data;
 		private Node<T> next;
 		private Node<T> prev;
@@ -94,7 +94,12 @@ public class CustomLinkedList<T> {
 		size--;
 		return popped;
 	}
-
+	
+	public void pushAllBack(T[] all) {
+		for (T elt : all) {
+			pushBack(elt);
+		}
+	}
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
